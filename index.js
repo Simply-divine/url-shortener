@@ -21,40 +21,49 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 const Schema = mongoose.Schema;
-// const ObjectId = Schema.ObjectId;
 
 const urlSchema = new Schema({
-  url: String,
-  alias: String,
+  alias: {
+    type: String,
+    validate: {
+      validator: function(v) {
+        return /^[\w\-]*$/.test(v);
+      },
+      message: props => `Alias format incorrect!`
+    },
+    unique: true
+  },
+  url: {
+    type: String,
+    required: [true, 'Please enter URL!!']
+  }
 });
 
 const Url = mongoose.model('Url', urlSchema);
 
-app.get('/', (req, res) => {
-  //   console.log(req.params);
-  res.json({ message: 'Welcome to URL shortener' });
-});
+// app.get('/',  (req, res) => {
+//   res.json({ message: 'Welcome to URL shortener' });
+// });
 
-//{url, alias}
-
-app.get('/url/:alias', async (req, res) => {
-  const alias = req.params.alias;
+app.get('/url/:alias', async (req, res, next) => {
+  const alias = req.params.alias.toLowerCase();
   try {
-    const url = await Url.findOne({ alias });
-    console.log(url.url);
-    res.redirect(url.url);
+    const {url} = await Url.findOne({ alias });
+    console.log(url);
+    res.redirect(url);
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 });
 
 const PORT = process.env.PORT | 3000;
 
-app.post('/url', async (req, res) => {
-  const { alias, url } = req.body;
+app.post('/url', async (req, res, next) => {
+  let { alias, url } = req.body;
   if (!alias) {
-    alias = nanoid();
+    alias = nanoid(5);
   }
+  alias=alias.toLowerCase();
   try {
     const urlObj = new Url({
       url,
@@ -65,10 +74,21 @@ app.post('/url', async (req, res) => {
       message: 'Successfully generated url',
     });
   } catch (err) {
-    res.json({
-      message: err.message,
-    });
+    next(err);
   }
+});
+
+app.use((req,res,next)=>{
+  const error = new Error('Not found');
+  res.status(404);
+  next(error);
+});
+
+app.use((error,req,res,next) => {
+  error.status = (error.status == 200)? 500: error.status;
+  res.json({
+    stack:(process.env.NODE_ENV === 'production')? '⛵': error.stack
+  });
 });
 
 app.listen(PORT, () => {
