@@ -44,7 +44,7 @@ const Url = mongoose.model('Url', urlSchema);
 app.get('/url/:alias', async (req, res, next) => {
   const alias = req.params.alias.toLowerCase();
   try {
-    const { url } = await Url.findOne({ alias });
+    const {url} = await Url.findOne({ alias });
     console.log(url);
     res.redirect(url);
   } catch (err) {
