@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "dev-con": "concurrently \"npm start\" \"npm run heroku-postbuild\"",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm start"
   },
   "keywords": [],
   "author": "",
