@@ -57,8 +57,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className={'myForm'}>
-        <form onSubmit={this.handleSubmit}>
+      <div className={'container'}>
+        <h1> Your custom URL shortener!!</h1>
+        <form onSubmit={this.handleSubmit} className={'myForm'}>
           <input
             type='text'
             name='url'
