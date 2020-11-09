@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 const app = express();
 
 dotenv.config();
+require('mongoose-type-url');
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(cors());
@@ -34,7 +35,7 @@ const urlSchema = new Schema({
     unique: true,
   },
   url: {
-    type: String,
+    type: mongoose.SchemaTypes.Url,
     required: [true, 'Please enter URL!!'],
   },
 });
@@ -44,7 +45,7 @@ const Url = mongoose.model('Url', urlSchema);
 app.get('/url/:alias', async (req, res, next) => {
   const alias = req.params.alias.toLowerCase();
   try {
-    const {url} = await Url.findOne({ alias });
+    const { url } = await Url.findOne({ alias });
     console.log(url);
     res.redirect(url);
   } catch (err) {
@@ -82,7 +83,9 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  error.status = error.status == 200 ? 500 : error.status;
+  if (error.name === 'MongoError') {
+    res.status(500);
+  }
   res.json({
     stack: process.env.NODE_ENV === 'production' ? '⛵' : error.stack,
   });

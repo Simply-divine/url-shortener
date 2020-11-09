@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "helmet": "^4.2.0",
     "mongoose": "^5.10.13",
+    "mongoose-type-url": "^2.1.0",
     "morgan": "^1.10.0",
     "nanoid": "^3.1.16"
   },
