@@ -26,29 +26,25 @@ const urlSchema = new Schema({
   alias: {
     type: String,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^[\w\-]*$/.test(v);
       },
-      message: props => `Alias format incorrect!`
+      message: (props) => `Alias format incorrect!`,
     },
-    unique: true
+    unique: true,
   },
   url: {
     type: String,
-    required: [true, 'Please enter URL!!']
-  }
+    required: [true, 'Please enter URL!!'],
+  },
 });
 
 const Url = mongoose.model('Url', urlSchema);
 
-// app.get('/',  (req, res) => {
-//   res.json({ message: 'Welcome to URL shortener' });
-// });
-
 app.get('/url/:alias', async (req, res, next) => {
   const alias = req.params.alias.toLowerCase();
   try {
-    const {url} = await Url.findOne({ alias });
+    const { url } = await Url.findOne({ alias });
     console.log(url);
     res.redirect(url);
   } catch (err) {
@@ -56,14 +52,14 @@ app.get('/url/:alias', async (req, res, next) => {
   }
 });
 
-const PORT = process.env.PORT | 3000;
+const PORT = process.env.PORT | 5000;
 
 app.post('/url', async (req, res, next) => {
   let { alias, url } = req.body;
   if (!alias) {
     alias = nanoid(5);
   }
-  alias=alias.toLowerCase();
+  alias = alias.toLowerCase();
   try {
     const urlObj = new Url({
       url,
@@ -71,6 +67,7 @@ app.post('/url', async (req, res, next) => {
     });
     await urlObj.save();
     res.json({
+      alias,
       message: 'Successfully generated url',
     });
   } catch (err) {
@@ -78,16 +75,16 @@ app.post('/url', async (req, res, next) => {
   }
 });
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
   const error = new Error('Not found');
   res.status(404);
   next(error);
 });
 
-app.use((error,req,res,next) => {
-  error.status = (error.status == 200)? 500: error.status;
+app.use((error, req, res, next) => {
+  error.status = error.status == 200 ? 500 : error.status;
   res.json({
-    stack:(process.env.NODE_ENV === 'production')? '⛵': error.stack
+    stack: process.env.NODE_ENV === 'production' ? '⛵' : error.stack,
   });
 });
 
