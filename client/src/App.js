@@ -29,13 +29,16 @@ function App() {
       setAlias(e.target.value);
     }
   };
-
+  const webUrl =
+    process.env.NODE_ENV === 'production'
+      ? 'http://hvu.xyz'
+      : 'http://localhost:1337';
   const handleSubmit = async (e) => {
     e.preventDefault();
     setToDefault();
     try {
       console.log(e.target[0].value);
-      const res = await axios.post('http://localhost:5000/url', {
+      const res = await axios.post(`${webUrl}/url`, {
         url: e.target[0].value,
         alias: e.target[1].value,
       });
@@ -94,9 +97,7 @@ function App() {
           {status.message}
         </p>
       )}
-      {status.success && (
-        <p>Your shortened URL: {`http://localhost:5000/url/${alias}`}</p>
-      )}
+      {status.success && <p>Your shortened URL: {`${webUrl}/${alias}`}</p>}
     </div>
   );
 }

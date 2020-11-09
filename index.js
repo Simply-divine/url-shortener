@@ -42,18 +42,7 @@ const urlSchema = new Schema({
 
 const Url = mongoose.model('Url', urlSchema);
 
-app.get('/url/:alias', async (req, res, next) => {
-  const alias = req.params.alias.toLowerCase();
-  try {
-    const { url } = await Url.findOne({ alias });
-    console.log(url);
-    res.redirect(url);
-  } catch (err) {
-    next(err);
-  }
-});
-
-const PORT = process.env.PORT | 5000;
+const PORT = process.env.PORT | 1337;
 
 app.post('/url', async (req, res, next) => {
   let { alias, url } = req.body;
@@ -76,6 +65,17 @@ app.post('/url', async (req, res, next) => {
   }
 });
 
+app.get('/:alias', async (req, res, next) => {
+  const alias = req.params.alias.toLowerCase();
+  try {
+    const { url } = await Url.findOne({ alias });
+    console.log(url);
+    res.redirect(url);
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use((req, res, next) => {
   const error = new Error('Not found');
   res.status(404);
@@ -87,7 +87,7 @@ app.use((error, req, res, next) => {
     res.status(500);
   }
   res.json({
-    stack: process.env.NODE_ENV === 'production' ? '⛵' : error.stack,
+    stack: process.env.NODE_ENV === 'production' ? '🍮' : error.stack,
   });
 });
 
