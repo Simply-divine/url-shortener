@@ -1,98 +1,104 @@
-import React, { Component } from 'react';
+
+import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-class App extends Component {
-  state = {
-    url: '',
-    alias: '',
-    errorPresent: false,
-    error: {},
-    success: false,
-  };
-  handleChange = (e) => {
+function App(){
+
+  const [url,setUrl] = useState("");
+  const [alias,setAlias] = useState("");
+  const [status,setStatus] = useState({
+    success:false,
+    pending:true,
+    error:false,
+    message: ''
+  })
+  
+  
+  const handleChange = (e) => {
     if (e.target.name === 'url') {
-      this.setState({
-        url: e.target.value,
-      });
+        setUrl(e.target.value);
     } else {
-      this.setState({
-        alias: e.target.value,
-      });
+      setAlias(e.target.value);
     }
   };
-
-  handleSubmit = async (e) => {
+   
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      console.log(e.target[0].value);
       const res = await axios.post('http://localhost:5000/url', {
         url: e.target[0].value,
         alias: e.target[1].value,
       });
       if (res.status === 200) {
         console.log(res.data);
-        this.setState({
-          alias: res.data.alias,
-          success: true,
+        setAlias(res.data.alias);
+        setStatus({
+          ...status,
+          message: 'URL generated successfully',
+          success:true
         });
       } else {
         console.log(res.data);
-        this.setState({
-          errorPresent: true,
-          error: {
-            stack: res.data.stack,
-          },
+        setStatus({
+          pending: false,
+          success:false,
+          error:true,
+          message: res.data.stack
         });
       }
     } catch (error) {
-      this.setState({
-        errorPresent: true,
-        error: {
-          stack: error.stack,
-        },
+      setStatus({
+        pending: false,
+        success:false,
+        error:true,
+        message: error.message
       });
     }
   };
 
-  render() {
-    return (
-      <div className={'container'}>
-        <h1> Your custom URL shortener!!</h1>
-        <form onSubmit={this.handleSubmit} className={'myForm'}>
+  return (
+      <div className={'myForm'}>
+        <form onSubmit={handleSubmit}>
           <input
             type='text'
             name='url'
+<<<<<<< HEAD
             value={this.state.url}
             onChange={this.handleChange}
             placeholder='Enter URL'
+=======
+            value={url}
+            onChange={handleChange}
+            placeholder='ENTER URL'
+>>>>>>> 0363c7fc7ba2f67059a09fef637145436e3eefd6
           />
           <input
             type='text'
             name='alias'
-            value={this.state.alias}
-            onChange={this.handleChange}
+            value={alias}
+            onChange={handleChange}
             placeholder='Enter alias'
           />
           <button type='submit'>Generate URL</button>
         </form>
-        {this.state.errorPresent && (
+        {status.error && (
           <p>
-            {' '}
             Error Occured:
             <br />
-            {this.state.error.stack}
+            {status.message}
           </p>
         )}
-        {this.state.success && (
+        {status.success && (
           <p>
             Your shortened URL:{' '}
-            {`http://localhost:5000/url/${this.state.alias}`}
+            {`http://localhost:5000/url/${alias}`}
           </p>
         )}
       </div>
     );
-  }
 }
 
 export default App;
