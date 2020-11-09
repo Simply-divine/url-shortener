@@ -65,7 +65,7 @@ class App extends Component {
             name='url'
             value={this.state.url}
             onChange={this.handleChange}
-            placeholder='ENTER URL'
+            placeholder='Enter URL'
           />
           <input
             type='text'

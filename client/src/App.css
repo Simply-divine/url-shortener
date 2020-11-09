@@ -1,3 +1,8 @@
+body,
+html {
+  height: 100%;
+}
+
 .container {
   height: 100vh;
   width: 100vw;
@@ -6,10 +11,7 @@
   align-items: center;
   justify-content: center;
 }
-body,
-html {
-  height: 100%;
-}
+
 .myForm {
   margin: 10px;
   padding: 2px;
