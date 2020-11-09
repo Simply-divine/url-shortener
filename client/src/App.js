@@ -1,20 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-class App extends Component {
-  state = {
-    url: '',
-    alias: '',
-    errorPresent: false,
-    error: {},
-    success: false,
-  };
+function App(){
+  const [url,setUrl] = useState("");
+  const [alias,setAlias] = useState("");
+  const [errorPresent,setErrorPresent] = useState(false);
+  const [error,setError] = useState({});
+  const [success,setSuccess] = useState(false);
+  
+  
   handleChange = (e) => {
     if (e.target.name === 'url') {
-      this.setState({
-        url: e.target.value,
-      });
+      setState(state.url = e.target.value);
     } else {
       this.setState({
         alias: e.target.value,
@@ -55,8 +53,7 @@ class App extends Component {
     }
   };
 
-  render() {
-    return (
+  return (
       <div className={'myForm'}>
         <form onSubmit={this.handleSubmit}>
           <input
@@ -91,7 +88,6 @@ class App extends Component {
         )}
       </div>
     );
-  }
 }
 
 export default App;
