@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { nanoid } = require('nanoid');
 const dotenv = require('dotenv');
@@ -12,15 +12,15 @@ require('mongoose-type-url');
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(cors());
-app.use(helmet());
+// app.use(helmet());
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  });
-}
+// if (process.env.NODE_ENV === 'production') {
 
+// }
+app.use(express.static('client/build'));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

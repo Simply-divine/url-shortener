@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -29,10 +29,7 @@ function App() {
       setAlias(e.target.value);
     }
   };
-  const webUrl =
-    process.env.NODE_ENV === 'production'
-      ? 'http://hvu.xyz'
-      : 'http://localhost:1337';
+  const webUrl = 'http://localhost:1337';
   const handleSubmit = async (e) => {
     e.preventDefault();
     setToDefault();
