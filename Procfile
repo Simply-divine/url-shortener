@@ -1,1 +1,1 @@
-web: npm run dev-con
+web: npm start
