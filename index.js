@@ -48,7 +48,7 @@ const urlSchema = new Schema({
 
 const Url = mongoose.model('Url', urlSchema);
 
-const PORT = process.env.PORT | 1337;
+const PORT = process.env.PORT || 1337;
 
 app.post('/url', async (req, res, next) => {
   let { alias, url } = req.body;
