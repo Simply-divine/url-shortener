@@ -29,7 +29,10 @@ function App() {
       setAlias(e.target.value);
     }
   };
-  const webUrl = 'http://localhost:1337';
+  const webUrl =
+    process.env.NODE_ENV === 'production'
+      ? 'http://www.hvu.xyz'
+      : 'http://localhost:1337';
   const handleSubmit = async (e) => {
     e.preventDefault();
     setToDefault();

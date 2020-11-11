@@ -14,9 +14,8 @@ app.use(morgan('tiny'));
 app.use(cors());
 // app.use(helmet());
 
-// if (process.env.NODE_ENV === 'production') {
-
-// }
+if (process.env.NODE_ENV === 'production') {
+}
 app.use(express.static('client/build'));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
@@ -90,9 +89,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  if (error.name === 'MongoError') {
-    res.status(500);
-  }
+  if (res.statusCode == 200) res.status(200);
   res.json({
     stack: process.env.NODE_ENV === 'production' ? '🍮' : error.stack,
   });
