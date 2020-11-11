@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { setUrlEntry } from './API';
 import './App.css';
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
       setAlias(e.target.value);
     }
   };
-  const webUrl =
+  const API_URL =
     process.env.NODE_ENV === 'production'
       ? 'https://hvu.xyz'
       : 'http://localhost:1337';
@@ -37,13 +37,13 @@ function App() {
     e.preventDefault();
     setToDefault();
     try {
-      console.log(e.target[0].value);
-      const res = await axios.post(`${webUrl}/url`, {
-        url: e.target[0].value,
-        alias: e.target[1].value,
-      });
+      const res = await setUrlEntry(
+        API_URL,
+        e.target[0].value,
+        e.target[1].value
+      );
+      console.log(res);
       if (res.status === 200) {
-        console.log(res.data);
         setAlias(res.data.alias);
         setStatus({
           error: false,
@@ -52,7 +52,6 @@ function App() {
           success: true,
         });
       } else {
-        console.log(res.data);
         setStatus({
           pending: false,
           success: false,
@@ -98,8 +97,8 @@ function App() {
         </p>
       )}
       {status.success && (
-        <a href={`${webUrl}/${alias}`}>
-          Your shortened URL: {`${webUrl}/${alias}`}
+        <a href={`${API_URL}/${alias}`}>
+          Your shortened URL: {`${API_URL}/${alias}`}
         </a>
       )}
     </div>

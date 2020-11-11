@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-// const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { nanoid } = require('nanoid');
 const dotenv = require('dotenv');
@@ -12,7 +11,6 @@ require('mongoose-type-url');
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(cors());
-// app.use(helmet());
 
 if (process.env.NODE_ENV === 'production') {
 }
@@ -61,11 +59,8 @@ app.post('/url', async (req, res, next) => {
       url,
       alias,
     });
-    await urlObj.save();
-    res.json({
-      alias,
-      message: 'Successfully generated url',
-    });
+    const createdEntry = await urlObj.save();
+    res.json(createdEntry);
   } catch (err) {
     next(err);
   }
@@ -89,7 +84,9 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  if (res.statusCode == 200) res.status(200);
+  let statusCode = res.statusCode == 200 ? 500 : res.statusCode;
+  res.status(statusCode);
+  console.log('Response status is ' + res.statusCode);
   res.json({
     stack: process.env.NODE_ENV === 'production' ? '🍮' : error.stack,
   });
