@@ -97,7 +97,11 @@ function App() {
           {status.message}
         </p>
       )}
-      {status.success && <p>Your shortened URL: {`${webUrl}/${alias}`}</p>}
+      {status.success && (
+        <a href={`${webUrl}/${alias}`}>
+          Your shortened URL: {`${webUrl}/${alias}`}
+        </a>
+      )}
     </div>
   );
 }
