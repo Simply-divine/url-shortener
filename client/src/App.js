@@ -42,7 +42,6 @@ function App() {
         e.target[0].value,
         e.target[1].value
       );
-      console.log(res);
       if (res.status === 200) {
         setAlias(res.data.alias);
         setStatus({
@@ -78,7 +77,7 @@ function App() {
           name='url'
           value={url}
           onChange={handleChange}
-          placeholder='ENTER URL'
+          placeholder='Enter URL'
         />
         <input
           type='text'
@@ -90,11 +89,7 @@ function App() {
         <button type='submit'>Generate URL</button>
       </form>
       {status.error && (
-        <p>
-          Error Occured:
-          <br />
-          {status.message}
-        </p>
+        <div className='error'>Error Occured: {' ' + status.message}</div>
       )}
       {status.success && (
         <a href={`${API_URL}/${alias}`}>

@@ -12,8 +12,6 @@ app.use(express.json());
 app.use(morgan('tiny'));
 app.use(cors());
 
-if (process.env.NODE_ENV === 'production') {
-}
 app.use(express.static('client/build'));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
@@ -49,12 +47,12 @@ const Url = mongoose.model('Url', urlSchema);
 const PORT = process.env.PORT || 1337;
 
 app.post('/url', async (req, res, next) => {
-  let { alias, url } = req.body;
-  if (!alias) {
-    alias = nanoid(5);
-  }
-  alias = alias.toLowerCase();
   try {
+    let { alias, url } = req.body;
+    if (!alias) {
+      alias = nanoid(5);
+    }
+    alias = alias.toLowerCase();
     const urlObj = new Url({
       url,
       alias,
@@ -62,6 +60,7 @@ app.post('/url', async (req, res, next) => {
     const createdEntry = await urlObj.save();
     res.json(createdEntry);
   } catch (err) {
+    console.log('here');
     next(err);
   }
 });
@@ -86,9 +85,8 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
   let statusCode = res.statusCode == 200 ? 500 : res.statusCode;
   res.status(statusCode);
-  console.log('Response status is ' + res.statusCode);
   res.json({
-    stack: process.env.NODE_ENV === 'production' ? '🍮' : error.stack,
+    stack: process.env.NODE_ENV === 'production' ? '🍰' : error.message,
   });
 });
 
