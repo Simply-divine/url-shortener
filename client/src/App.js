@@ -33,6 +33,14 @@ function App() {
     process.env.NODE_ENV === 'production'
       ? 'https://hvu.xyz'
       : 'http://localhost:1337';
+  const copyToClipboard = () => {
+    var aux = document.createElement("input");
+    aux.setAttribute("value", document.getElementById("shortenedURL").href);
+    document.body.appendChild(aux);
+    aux.select();
+    document.execCommand("copy");
+    document.body.removeChild(aux);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setToDefault();
@@ -92,9 +100,12 @@ function App() {
         <div className='error'>Error Occured: {' ' + status.message}</div>
       )}
       {status.success && (
-        <a href={`${API_URL}/${alias}`}>
+        <div>
+          <a id="shortenedURL" href={`${API_URL}/${alias}`}>
           Your shortened URL: {`${API_URL}/${alias}`}
-        </a>
+          </a>
+          <button class="material-icons btnCopy" onClick={copyToClipboard}>content_copy</button>
+        </div>
       )}
     </div>
   );
